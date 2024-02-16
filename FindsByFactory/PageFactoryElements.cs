@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using SpecflowSelenium.Support;
+using System.Reflection;
 
 namespace SpecflowSelenium.FindsByFactory
 {
@@ -68,7 +69,7 @@ namespace SpecflowSelenium.FindsByFactory
         /// <returns>Returns the desired element.</returns>
         public static IWebElement WaitAndReturnElement(IWebDriver driver, How locator, string locatorValue, int timeout)
         {
-            IWebElement element = null;
+            ReadOnlyCollection<IWebElement> elements = null;
 
             for (int i = 0; i < timeout; i++)
             {
@@ -76,67 +77,65 @@ namespace SpecflowSelenium.FindsByFactory
                 {
                     case How.ClassName:
                         {
-                            element = driver.FindElement(By.ClassName(locatorValue));
+                            elements = driver.FindElements(By.ClassName(locatorValue));
                             break;
                         }
                     case How.CssSelector:
                         {
-                            element = driver.FindElement(By.CssSelector(locatorValue));
+                            elements = driver.FindElements(By.CssSelector(locatorValue));
                             break;
                         }
                     case How.DataTestId:
                         {
-                            element = driver.FindElement(By.CssSelector($"[data-testid='{locatorValue}']"));
+                            elements = driver.FindElements(By.CssSelector($"[data-testid='{locatorValue}']"));
                             break;
                         }
                     case How.DataTest:
                         {
-                            element = driver.FindElement(By.CssSelector($"[data-test='{locatorValue}']"));
+                            elements = driver.FindElements(By.CssSelector($"[data-test='{locatorValue}']"));
                             break;
                         }
                     case How.Id:
                         {
-                            element = driver.FindElement(By.Id(locatorValue));
+                            elements = driver.FindElements(By.Id(locatorValue));
                             break;
                         }
                     case How.LinkText:
                         {
-                            element = driver.FindElement(By.LinkText(locatorValue));
+                            elements = driver.FindElements(By.LinkText(locatorValue));
                             break;
                         }
                     case How.Name:
                         {
-                            element = driver.FindElement(By.Name(locatorValue));
+                            elements = driver.FindElements(By.Name(locatorValue));
                             break;
                         }
                     case How.PartialLinkText:
                         {
-                            element = driver.FindElement(By.PartialLinkText(locatorValue));
+                            elements = driver.FindElements(By.PartialLinkText(locatorValue));
                             break;
                         }
                     case How.TagName:
                         {
-                            element = driver.FindElement(By.TagName(locatorValue));
+                            elements = driver.FindElements(By.TagName(locatorValue));
                             break;
                         }
                     case How.XPath:
                         {
-                            element = driver.FindElement(By.XPath(locatorValue));
+                            elements = driver.FindElements(By.XPath(locatorValue));
                             break;
                         }
                 }
 
-                if (element == null)
-                {
+                if (elements.Count > 1)
+                    throw new Exception($"Existe mais de um elemento com o seletor '{locator.GetDescription()} = {locator}' na página.");
+                else if (elements.Count == 0)
                     WaitsCore.WaitFor(1000);
-                }
                 else
-                {
                     break;
-                }
             }
 
-            return element;
+            return elements[0];
         }
     }
 }
