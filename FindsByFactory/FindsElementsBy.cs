@@ -20,6 +20,7 @@
         ClassName,
         CssSelector,
         DataTestId,
+        DataTest,
         Id,
         LinkText,
         Name,

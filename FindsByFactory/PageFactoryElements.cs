@@ -89,6 +89,11 @@ namespace SpecflowSelenium.FindsByFactory
                             element = driver.FindElement(By.CssSelector($"[data-testid='{locatorValue}']"));
                             break;
                         }
+                    case How.DataTest:
+                        {
+                            element = driver.FindElement(By.CssSelector($"[data-test='{locatorValue}']"));
+                            break;
+                        }
                     case How.Id:
                         {
                             element = driver.FindElement(By.Id(locatorValue));
