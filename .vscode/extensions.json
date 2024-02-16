@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "editorconfig.editorconfig",
+        "fudge.auto-using",
+        "ms-dotnettools.csharp",
+        "kreativ-software.csharpextensions",
+        "adrianwilczynski.namespace",
+        "richardzampieriprog.csharp-snippet-productivity",
+        "k--kato.docomment",
+        "yzhang.markdown-all-in-one",
+        "bat67.markdown-extension-pack"
+    ]
+}

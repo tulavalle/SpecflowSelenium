@@ -1,0 +1,49 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  ProjectName: 'SpecflowSelenium'
+  ProjectPath: '**/SpecflowSelenium.csproj'
+  BuildConfiguration: 'Release'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '8.x'
+  
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
+      feedsToUse: 'select'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Build $(ProjectName)'
+    inputs:
+      command: 'build'
+      arguments: '--configuration $(BuildConfiguration)'
+      projects: '$(ProjectPath)'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Pack $(ProjectName)'
+    inputs:
+      command: 'pack'
+      packagesToPack: '$(ProjectPath)'
+      nobuild: true
+      versioningScheme: 'off'      
+
+  - task: NuGetAuthenticate@0
+    displayName: 'NuGetAuthenticate $(ProjectName)'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'push $(ProjectName)'
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: 'TODO'
